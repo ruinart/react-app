@@ -1,18 +1,48 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.state = {value: 'Type some text here!', reverseOn: false};
+  }
+
+  handleChange(e) {
+    if(this.state.reverseOn) {
+      var txt = e.target.value;
+      txt = txt.split("").reverse().join("");
+      this.setState({value: txt});
+    } else {
+      this.setState({value: e.target.value});
+    }
+  }
+  
+  handleClick() {
+    this.setState(prevState => ({
+      reverseOn: !prevState.reverseOn
+    }));
+    var txt = this.state.value;
+    txt = txt.split("").reverse().join("");
+    this.setState({value: txt});
+  }
+  
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h3>Input</h3>
+        <textarea
+          onChange={this.handleChange}
+          defaultValue={this.state.value} />
+        <h3>Output</h3>
+        <div
+          className="content"
+          dangerouslySetInnerHTML={{__html: this.state.value}}
+        />
+        <button onClick={this.handleClick}>
+          Reverse!
+        </button>
       </div>
     );
   }
